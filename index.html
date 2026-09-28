@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>English Placement Test</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <!-- START SCREEN -->
+        <section id="startScreen">
+
+            <h1>English Placement Test</h1>
+
+            <p>
+                Discover your English level in Reading,
+                Listening, Grammar and Vocabulary.
+            </p>
+
+            <p class="small-text">
+                This test is an estimated placement test.
+            </p>
+
+            <button id="startButton">
+                Start Test
+            </button>
+
+        </section>
+
+
+        <!-- TEST SCREEN -->
+        <section id="testScreen" class="hidden">
+
+            <div class="top-bar">
+
+                <span id="progressText">
+                    Question 1 of 16
+                </span>
+
+                <span id="skillText">
+                    Vocabulary
+                </span>
+
+            </div>
+
+            <div class="question-card">
+
+                <div id="levelText" class="level-badge">
+                    A2
+                </div>
+
+                <div id="passageText" class="passage hidden"></div>
+
+                <div id="listeningArea" class="hidden">
+
+                    <p class="listening-label">
+                        Listen to the sentence before answering.
+                    </p>
+
+                    <button id="playButton">
+                        ▶ Play
+                    </button>
+
+                </div>
+
+                <h2 id="questionText">
+                    Question
+                </h2>
+
+                <div id="optionsContainer"></div>
+
+            </div>
+
+            <button id="nextButton" disabled>
+                Next
+            </button>
+
+        </section>
+
+
+        <!-- RESULT SCREEN -->
+        <section id="resultScreen" class="hidden">
+
+            <h1>Your Results</h1>
+
+            <div id="overallResult"></div>
+
+            <div id="skillResults"></div>
+
+            <div class="summary-box">
+
+                <p>
+                    Total Questions:
+                    <strong id="totalQuestions"></strong>
+                </p>
+
+                <p>
+                    Correct Answers:
+                    <strong id="correctAnswers"></strong>
+                </p>
+
+                <p>
+                    Incorrect Answers:
+                    <strong id="incorrectAnswers"></strong>
+                </p>
+
+            </div>
+
+            <h2>Question Breakdown</h2>
+
+            <div id="questionBreakdown"></div>
+
+        </section>
+
+    </main>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
