@@ -218,11 +218,67 @@ function calculateResults() {
 
 
     const overallPercentage =
-        Math.round((correctAnswers / totalQuestions) * 100);
+        Math.round(
+            (correctAnswers / totalQuestions) * 100
+        );
+
+
+    const skillLevelNumbers = {
+        A1: 1,
+        A2: 2,
+        B1: 3,
+        B2: 4,
+        C1: 5
+    };
+
+
+    const levelNames = {
+        1: "A1",
+        2: "A2",
+        3: "B1",
+        4: "B2",
+        5: "C1"
+    };
+
+
+    const skillLevels = {};
+
+
+    skillNames.forEach(skill => {
+
+        const skillQuestions =
+            userResults.filter(
+                result => result.skill === skill
+            );
+
+
+        const levelAwareQuestions =
+            skillQuestions.map(result => ({
+                level: result.level,
+                correct: result.correct
+            }));
+
+
+        const level =
+            estimateSkillLevel(
+                levelAwareQuestions
+            );
+
+
+        skillLevels[skill] = level;
+    });
+
+
+    const averageLevel =
+        skillNames.reduce(
+            (sum, skill) =>
+                sum + skillLevelNumbers[skillLevels[skill]],
+            0
+        ) / skillNames.length;
 
 
     const overallLevel =
-        estimateCEFR(overallPercentage);
+        levelNames[Math.round(averageLevel)];
 
 
     overallResult.innerHTML = `
@@ -233,11 +289,14 @@ function calculateResults() {
     `;
 
 
-    totalQuestionsElement.textContent = totalQuestions;
+    totalQuestionsElement.textContent =
+        totalQuestions;
 
-    correctAnswersElement.textContent = correctAnswers;
+    correctAnswersElement.textContent =
+        correctAnswers;
 
-    incorrectAnswersElement.textContent = incorrectAnswers;
+    incorrectAnswersElement.textContent =
+        incorrectAnswers;
 
 
     skillResults.innerHTML = "";
@@ -246,7 +305,9 @@ function calculateResults() {
     skillNames.forEach(skill => {
 
         const skillQuestions =
-            userResults.filter(result => result.skill === skill);
+            userResults.filter(
+                result => result.skill === skill
+            );
 
 
         const total =
@@ -254,7 +315,9 @@ function calculateResults() {
 
 
         const correct =
-            skillQuestions.filter(result => result.correct).length;
+            skillQuestions.filter(
+                result => result.correct
+            ).length;
 
 
         const incorrect =
@@ -264,18 +327,22 @@ function calculateResults() {
         const percentage =
             total === 0
                 ? 0
-                : Math.round((correct / total) * 100);
+                : Math.round(
+                    (correct / total) * 100
+                );
 
 
         const level =
-            estimateCEFR(percentage);
+            skillLevels[skill];
 
 
         const skillCard =
             document.createElement("div");
 
 
-        skillCard.classList.add("skill-result");
+        skillCard.classList.add(
+            "skill-result"
+        );
 
 
         skillCard.innerHTML = `
@@ -321,7 +388,9 @@ function calculateResults() {
             document.createElement("div");
 
 
-        item.classList.add("breakdown-item");
+        item.classList.add(
+            "breakdown-item"
+        );
 
 
         const status =
@@ -331,7 +400,9 @@ function calculateResults() {
 
 
         item.innerHTML = `
-            <strong>Question ${result.questionId}</strong>
+            <strong>
+                Question ${result.questionId}
+            </strong>
 
             <p>
                 Skill: ${result.skill}
@@ -351,24 +422,37 @@ function calculateResults() {
     });
 }
 
+function estimateSkillLevel(skillQuestions) {
 
-function estimateCEFR(percentage) {
+    const levels = ["A1", "A2", "B1", "B2", "C1"];
 
-    if (percentage >= 85) {
-        return "C1";
+    let estimatedLevel = "A1";
+
+    for (const level of levels) {
+
+        const levelQuestions =
+            skillQuestions.filter(
+                question => question.level === level
+            );
+
+        if (levelQuestions.length === 0) {
+            continue;
+        }
+
+        const correct =
+            levelQuestions.filter(
+                question => question.correct
+            ).length;
+
+        const accuracy =
+            correct / levelQuestions.length;
+
+        if (accuracy >= 2 / 3) {
+            estimatedLevel = level;
+        } else {
+            break;
+        }
     }
 
-    if (percentage >= 70) {
-        return "B2";
-    }
-
-    if (percentage >= 55) {
-        return "B1";
-    }
-
-    if (percentage >= 40) {
-        return "A2";
-    }
-
-    return "A1";
+    return estimatedLevel;
 }
